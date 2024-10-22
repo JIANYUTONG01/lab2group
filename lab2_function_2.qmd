@@ -22,8 +22,6 @@ library(dplyr)
 drg <- read_csv(here('DRG_data.csv'))
 ```
 
-Write a function that calculates statistics over all of the DRG codes for average Medicare payments. Make it an option in your function to calculate either the mean, median, or standard deviation of the DRG codes.
-
 ```{r}
 # Function 2
 # Function to calculate statistics over DRG codes for average Medicare payments
