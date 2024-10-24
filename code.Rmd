@@ -1,0 +1,67 @@
+---
+title: "original"
+author: "JIANYU TONG"
+date: "2024-10-21"
+output: html_document
+---
+
+```{r}
+library(here)
+library(janitor)
+library(dplyr)
+drgdata <- read.csv(here("DRG_data.csv")) %>%
+  clean_names() %>%
+  mutate(
+    characterID = as.character(drg_definition),
+    pureID = substr(characterID, 1, 3)
+  )
+```
+
+
+
+
+```{r}
+# Define the bpPayment function which takes two arguments: data and type.
+bpPayment <- function(data, type) {
+  
+  # Load the ggplot2 library for data visualization.
+  library(ggplot2)
+  
+  # If the specified type is "Average_Covered_Charges", create a boxplot for average covered charges.
+  if (type == "Average_Covered_Charges") {
+    ggplot(data, aes(x = pureID, y = average_covered_charges)) +
+      geom_boxplot() +  # Create a boxplot for the selected data.
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +  # Rotate x-axis labels to avoid overlap.
+      labs(title = "boxplot of Average Covered Charges", x = "DRG ID", y = "Average Covered Charges") +  # Add title and labels.
+      scale_x_discrete(breaks = unique(drgdata$pureID)[seq(1, length(unique(drgdata$pureID)), by = 5)])  # Display every 5th label on the x-axis.
+    
+  # If the specified type is "Average_Total_Payments", create a boxplot for average total payments.
+  } else if (type == "Average_Total_Payments") {
+    ggplot(data, aes(x = pureID, y = average_total_payments)) +
+      geom_boxplot() +  # Create a boxplot for average total payments.
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +  # Rotate x-axis labels to avoid overlap.
+      labs(title = "boxplot of Average Total Payments", x = "DRG ID", y = "Average Total Charges") +  # Add title and labels.
+      scale_x_discrete(breaks = unique(drgdata$pureID)[seq(1, length(unique(drgdata$pureID)), by = 5)])  # Display every 5th label on the x-axis.
+    
+  # If the specified type is "Average_Medicare_Payments", create a boxplot for average Medicare payments.
+  } else if (type == "Average_Medicare_Payments") {
+    ggplot(data, aes(x = pureID, y = average_medicare_payments)) +
+      geom_boxplot() +  # Create a boxplot for average Medicare payments.
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +  # Rotate x-axis labels to avoid overlap.
+      labs(title = "boxplot of Average Covered Charges", x = "DRG ID", y = "Average Medicare Charges") +  # Add title and labels.
+      scale_x_discrete(breaks = unique(drgdata$pureID)[seq(1, length(unique(drgdata$pureID)), by = 5)])  # Display every 5th label on the x-axis.
+  }
+}
+
+# Call the bpPayment function to create a plot for average covered charges.
+plot <- bpPayment(data = drgdata, type = "Average_Covered_Charges")
+
+# Display the created plot.
+plot
+```
+
+
+
+
+
+
