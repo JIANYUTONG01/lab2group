@@ -1,0 +1,59 @@
+---
+title: "lab2"
+author: "group17"
+format: html
+editor: visual
+---
+
+```{r,echo=FALSE}
+knitr::opts_chunk$set(cache=TRUE, error=FALSE, message=FALSE, warning=FALSE,
+                      echo=T, tidy.opts=list(width.cutoff=60),tidy=TRUE)
+
+```
+
+```{r}
+# Load packages
+library(readr)
+library(here)
+library(dplyr)
+```
+
+```{r}
+drg <- read_csv(here('DRG_data.csv'))
+```
+
+```{r}
+# Function 2
+# Function to calculate statistics over DRG codes for average Medicare payments
+calculate_drg_statistics <- function(data, statistic) {
+ 
+  # Group by DRG Definition and summarize the data
+  summary_data <- data %>%
+    group_by(`DRG Definition`) %>%
+    summarise(avg_medicare_payment = mean(`Average Medicare Payments`, na.rm = TRUE))
+  
+  # Check if the statistic is valid
+  if (!statistic %in% c("mean", "median", "sd")) {
+    stop("Invalid statistic. Please choose 'mean', 'median', or 'sd'.")
+  }
+  
+  # Calculate the required statistic
+  result <- switch(statistic,
+                   "mean" = mean(summary_data$avg_medicare_payment, na.rm = TRUE),
+                   "median" = median(summary_data$avg_medicare_payment, na.rm = TRUE),
+                   "sd" = sd(summary_data$avg_medicare_payment, na.rm = TRUE),
+                   )
+  
+  # Print out the result
+  cat("The", statistic, "for average medicare payments is", result, ".\n")
+}
+```
+
+
+```{r}
+# Try out the function
+calculate_drg_statistics(drg, "mean")
+calculate_drg_statistics(drg, "median")
+calculate_drg_statistics(drg, "sd")
+calculate_drg_statistics(drg, "sd1")
+```
